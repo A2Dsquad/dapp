@@ -1,0 +1,104 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+    "vcs": {
+      "useIgnoreFile": true
+    },
+    "formatter": {
+      "enabled": true,
+      "formatWithErrors": false,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineEnding": "lf",
+      "lineWidth": 100,
+      "attributePosition": "auto"
+    },
+    "organizeImports": {
+      "enabled": true
+    },
+    "linter": {
+      "enabled": true,
+      "rules": {
+        "recommended": true,
+        "correctness": {
+          "noUndeclaredVariables": "error",
+          "noUnusedImports": "error",
+          "useHookAtTopLevel": "error"
+        },
+        "performance": {
+          "noBarrelFile": "error"
+        },
+        "style": {
+          "noDefaultExport": "off",
+          "noNegationElse": "warn",
+          "useCollapsedElseIf": "error",
+          "useConsistentArrayType": "warn",
+          "useNodeAssertStrict": "error",
+          "useShorthandArrayType": "error",
+          "useShorthandAssign": "error",
+          "useSingleCaseStatement": "error"
+        },
+        "suspicious": {
+          "noEmptyBlockStatements": "error",
+          "noSkippedTests": "error",
+          "useAwait": "error",
+          "noConsoleLog": "error",
+          "noAssignInExpressions": "off"
+        },
+        "nursery": {
+          "useImportRestrictions": "error"
+        },
+        "a11y": {
+          "useKeyWithClickEvents": "off"
+        }
+      }
+    },
+    "javascript": {
+      "formatter": {
+        "jsxQuoteStyle": "double",
+        "quoteProperties": "asNeeded",
+        "trailingComma": "es5",
+        "semicolons": "asNeeded",
+        "arrowParentheses": "always",
+        "bracketSpacing": true,
+        "bracketSameLine": false,
+        "quoteStyle": "single",
+        "attributePosition": "auto"
+      }
+    },
+    "files": {
+      "ignore": [
+        "node_modules/**/*",
+        ".next/**/*",
+        "package.json",
+        "src/lib/smart-contract-helpers/*"
+      ]
+    },
+    "overrides": [
+      {
+        "include": ["src/lib/contracts/**", "src/lib/wrappers/**"],
+        "linter": {
+          "rules": {
+            "suspicious": {
+              "noEmptyBlockStatements": "off",
+              "noExplicitAny": "off"
+            },
+            "complexity": {
+              "noStaticOnlyClass": "off",
+              "noBannedTypes": "off"
+            }
+          }
+        }
+      },
+      {
+        "include": ["src/lib/form.ts"],
+        "linter": {
+          "rules": {
+            "suspicious": {
+              "noExplicitAny": "off"
+            }
+          }
+        }
+      }
+    ]
+  }
+  
