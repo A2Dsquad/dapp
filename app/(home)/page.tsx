@@ -29,8 +29,8 @@ export default function StakingPlatform() {
 
   const refinedAssets = fakeAssets.map(asset => ({
     ...asset,
-    restaked: fromDecimals(poolShares?.[0]?.userStaked ?? 0),
-    share: BigNumber(poolShares?.[0]?.userStaked ?? 0).dividedBy(poolShares?.[0]?.poolStaked ?? 1).multipliedBy(100).toFixed(2),
+    restaked: poolShares?.[0]?.userStaked ? fromDecimals(poolShares?.[0]?.userStaked ?? 0) : '--',
+    share: poolShares?.[0]?.userStaked ? BigNumber(poolShares?.[0]?.userStaked ?? 0).dividedBy(poolShares?.[0]?.poolStaked ?? 1).multipliedBy(100).toFixed(2) : '--',
   }))
 
 

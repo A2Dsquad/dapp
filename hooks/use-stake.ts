@@ -17,7 +17,6 @@ export function useStake(tokenAddress: string) {
   const mutateAsync = async (amount: string) => {
     if (!account) return
 
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const payload = createEntryPayload(StakerManagerABI as any, {
       function: 'stake_asset_entry',
       typeArguments: [],

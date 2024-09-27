@@ -11,6 +11,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
+import { toCurrency } from '@/lib/number'
 
 export function AssetTable({
   assets,
@@ -45,8 +46,8 @@ export function AssetTable({
                   </div>
                 </TableCell>
                 <TableCell>${asset.tvl}M</TableCell>
-                <TableCell>${asset.restaked}</TableCell>
-                <TableCell>{asset.share}%</TableCell>
+                <TableCell>{asset.restaked !== '--' ? toCurrency(asset.restaked, { prefix: '$' }) : '--'}</TableCell>
+                <TableCell>{asset.share !== '--' ? `${asset.share}%` : '--'}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-col justify-end sm:flex-row gap-2">
                     <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
