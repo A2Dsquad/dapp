@@ -10,11 +10,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { WalletSelector } from "@/components/wallet-selector";
+import { WalletSelector } from '@/components/wallet-selector'
 
 export function Header() {
   const pathname = usePathname()
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => pathname.startsWith(path)
 
   return (
     <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -22,7 +22,7 @@ export function Header() {
         <div className="text-2xl font-bold">Restaking</div>
         <nav className="hidden md:flex space-x-4">
           <Link href="/">
-            <Button variant={isActive('/restake') ? 'default' : 'ghost'} className="font-semibold">
+            <Button variant={isActive('/staking') ? 'default' : 'ghost'} className="font-semibold">
               Restake
             </Button>
           </Link>

@@ -49,10 +49,10 @@ export function AssetTable({
                 <TableCell>{asset.share}%</TableCell>
                 <TableCell>
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Link href="/staking">
+                    <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
                       <Button variant="default">Deposit</Button>
                     </Link>
-                    <Link href="/staking">
+                    <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
                       <Button variant="secondary">Withdraw</Button>
                     </Link>
                   </div>
