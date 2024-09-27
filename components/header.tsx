@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { WalletSelector } from "@/components/wallet-selector";
 
 export function Header() {
   const pathname = usePathname()
@@ -37,9 +38,7 @@ export function Header() {
           </Link>
         </nav>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
-            Connect Wallet
-          </Button>
+          <WalletSelector />
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon">

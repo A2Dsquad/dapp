@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Header } from "@/components/header";
+import { WalletProvider } from "@/components/wallet-provider";
 import { Kanit} from 'next/font/google';
 import { BackgroundBeams } from "@/components/aceternity/background-beams";
 import "./globals.css";
@@ -26,13 +27,15 @@ export default function RootLayout({
       <body
         className={`${kanit.variable} antialiased bg-background dark`}
       >
-        <div className="relative min-h-screen">
-          <BackgroundBeams />
-          <Header />
-          <div className="isolate">
-            {children}
-          </div>
-        </div>
+        <WalletProvider>
+            <div className="relative min-h-screen">
+            <BackgroundBeams />
+            <Header />
+            <div className="isolate">
+                {children}
+            </div>
+            </div>
+        </WalletProvider>
       </body>
     </html>
   );
