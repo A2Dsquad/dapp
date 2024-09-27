@@ -52,10 +52,10 @@ export function AssetTable({
                 <TableCell className="text-right">
                   <div className="flex flex-col justify-end sm:flex-row gap-2">
                     <Link href={`/staking/${TOKEN_ADDRESS}`}>
-                      <Button variant="default">Deposit</Button>
+                      <Button variant="default">Restake</Button>
                     </Link>
                     <Link href={`/staking/${TOKEN_ADDRESS}`}>
-                      <Button variant="secondary">Withdraw</Button>
+                      <Button variant="secondary">Unstake</Button>
                     </Link>
                   </div>
                 </TableCell>

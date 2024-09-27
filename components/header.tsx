@@ -14,17 +14,22 @@ import { WalletSelector } from '@/components/wallet-selector'
 
 export function Header() {
   const pathname = usePathname()
-  const isActive = (path: string) => pathname.startsWith(path)
+  const isActive = (path: string) => (path === '/' ? path === pathname : pathname.startsWith(path))
 
   return (
     <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 max-w-screen-2xl items-center justify-between w-full">
         <Link href="/">
-          <div className="text-2xl font-bold">Sentra Layer</div>
+          <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-teal-500 text-transparent bg-clip-text">
+            Sentra Layer
+          </div>
         </Link>
         <nav className="hidden md:flex space-x-4">
           <Link href="/">
-            <Button variant={isActive('/staking') ? 'default' : 'ghost'} className="font-semibold">
+            <Button
+              variant={isActive('/staking') || isActive('/') ? 'default' : 'ghost'}
+              className="font-semibold"
+            >
               Restake
             </Button>
           </Link>
@@ -48,9 +53,15 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>Restake</DropdownMenuItem>
-              <DropdownMenuItem>Operator</DropdownMenuItem>
-              <DropdownMenuItem>AVS</DropdownMenuItem>
+              <Link href="/">
+                <DropdownMenuItem>Restake</DropdownMenuItem>
+              </Link>
+              <Link href="/operator">
+                <DropdownMenuItem>Operator</DropdownMenuItem>
+              </Link>
+              <Link href="/avs">
+                <DropdownMenuItem>AVS</DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -29,7 +29,12 @@ export function useUnstake(tokenAddress: string) {
       })
 
       await submitTransaction(payload)
-      localStorage.setItem('unstake-time', Date.now().toString())
+      const unstakeTimesLocal = localStorage.getItem('unstake-time')?.split(',') ?? []
+      if (unstakeTimesLocal) {
+        localStorage.setItem('unstake-time', [...unstakeTimesLocal, Date.now().toString()].join(','))
+      } else {
+        localStorage.setItem('unstake-time', Date.now().toString())
+      }
       toast.success('Unstaked successfully')
       loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
       reset()

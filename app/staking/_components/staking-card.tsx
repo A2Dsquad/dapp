@@ -21,6 +21,15 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react'
 import { useUnstake } from '@/hooks/use-unstake'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Terminal } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { toast } from 'sonner'
 
 interface StakingCardProps {
   assetName: string
@@ -52,11 +61,14 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
   const stakeMutation = useStake(tokenAddress)
   const unstakeMutation = useUnstake(tokenAddress)
 
-  const unstakeTime = typeof window !== 'undefined' ? localStorage.getItem('unstake-time') : null
+  const unstakeTimes =
+    typeof window !== 'undefined' ? localStorage.getItem('unstake-time')?.split(',') : null
 
   const sevenDays = 7 * 24 * 60 * 60 * 1000
-  const unstakeWithdrawalTime = unstakeTime
-    ? new Date(Number.parseInt(unstakeTime)).getTime() + sevenDays
+  const unstakeWithdrawalTimes = unstakeTimes
+    ? unstakeTimes.map(
+        (unstakeTime) => new Date(Number.parseInt(unstakeTime)).getTime() + sevenDays,
+      )
     : null
   const now = new Date().getTime()
 
@@ -96,7 +108,7 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
     mode === 'withdraw' ? stakedAmount === 0 || !inputAmount : !balance || !inputAmount
 
   return (
-    <Card className="w-full max-w-xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-2">
         <div className="-ml-2 flex items-center gap-2">
           <Button variant="ghost" onClick={() => router.back()}>
@@ -112,7 +124,7 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
         </div>
         <div className="flex space-x-2 w-full md:w-auto">
           <Button
-            variant={mode === 'deposit' ? 'secondary' : 'outline'}
+            variant={mode === 'deposit' ? 'default' : 'ghost'}
             onClick={() => setMode('deposit')}
             size="sm"
             className="w-full md:w-auto"
@@ -120,7 +132,7 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
             Restake
           </Button>
           <Button
-            variant={mode === 'withdraw' ? 'secondary' : 'outline'}
+            variant={mode === 'withdraw' ? 'default' : 'ghost'}
             onClick={() => setMode('withdraw')}
             size="sm"
             className="w-full md:w-auto"
@@ -130,6 +142,48 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
         </div>
       </CardHeader>
       <CardContent>
+        {mode === 'withdraw' && account && unstakeTimes && unstakeWithdrawalTimes && (
+          <Alert className="mb-4">
+            <AlertTitle className="flex items-center">
+              <Terminal className="h-6 w-6 mr-2" />
+                Unstake in queue
+                </AlertTitle>
+            <AlertDescription>
+              <p className="mb-2 mt-2">Your unstake requests (withdrawable after 7 days):</p>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Request time</TableHead>
+                    <TableHead>Claim time</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {unstakeTimes.map((unstakeTime, index) => (
+                    <TableRow key={index.toString()}>
+                      <TableCell>
+                        {new Date(+unstakeTime).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(+unstakeWithdrawalTimes[index]).toLocaleString()}
+                      </TableCell>
+                      <TableCell className="flex justify-end">
+                        <Button disabled className="ml-auto" onClick={() => {
+                            toast.info('Coming soon')
+                          }}
+                        >
+                          {unstakeWithdrawalTimes[index] > now ? 'Pending' : 'Ready'}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div>
@@ -186,29 +240,14 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
                 </div>
               </div>
             </div>
-            {mode === 'withdraw' &&
-              unstakeTime &&
-              unstakeWithdrawalTime &&
-              now < unstakeWithdrawalTime && (
-                <Alert>
-                  <Terminal className="h-5 w-5" />
-                  <AlertTitle>Unstake in queue</AlertTitle>
-                  <AlertDescription>
-                    You have unstaked at{' '}
-                    {new Date(Number.parseInt(unstakeTime ?? '')).toLocaleString()}. You can
-                    withdraw your stake in 7 days.
-                  </AlertDescription>
-                </Alert>
-              )}
-            {(mode === 'deposit' || !unstakeTime) && (
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={!form.formState.isDirty || isDisabled || !account}
-              >
-                {mode === 'deposit' ? 'Restake' : 'Unstake'}
-              </Button>
-            )}
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!form.formState.isDirty || isDisabled || !account}
+            >
+              {mode === 'deposit' ? 'Restake' : 'Unstake'}
+            </Button>
           </form>
         </Form>
       </CardContent>
