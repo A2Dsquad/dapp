@@ -12,6 +12,8 @@ import { NumericInput } from '@/components/ui/numeric-input'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useBalance } from '@/hooks/use-balance'
+import { useStake } from '@/hooks/use-stake'
+import { toDecimals } from '@/lib/number'
 
 interface StakingCardProps {
   assetName: string
@@ -37,6 +39,7 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
   const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit')
   const router = useRouter()
   const { data: balance = '0' } = useBalance(tokenAddress)
+  const stakeMutation = useStake(tokenAddress)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,9 +55,8 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
   }
 
   const onSubmit = (data: FormValues) => {
-    // This is where you would handle the form submission
-    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-    console.log(data)
+    const amountInDecimal = toDecimals(data.amount)
+    stakeMutation.mutateAsync(amountInDecimal)
   }
 
   return (

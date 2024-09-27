@@ -25,7 +25,7 @@ export function AssetTable({
               <TableHead>TVL</TableHead>
               <TableHead>Restaked</TableHead>
               <TableHead>Your share</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -47,8 +47,8 @@ export function AssetTable({
                 <TableCell>${asset.tvl}M</TableCell>
                 <TableCell>${asset.restaked}K</TableCell>
                 <TableCell>{asset.share}%</TableCell>
-                <TableCell>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                <TableCell className="text-right">
+                  <div className="flex flex-col justify-end sm:flex-row gap-2">
                     <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
                       <Button variant="default">Deposit</Button>
                     </Link>
