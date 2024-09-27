@@ -5,7 +5,7 @@ export function RewardDetails({ rewards }: { rewards: { name: string, amount: st
   return (
     <Card>
       <CardContent className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Your reward details</h2>
+        <h2 className="text-lg font-semibold mb-4 text-muted-foreground">Your reward details</h2>
         <div className="space-y-2">
           {rewards.map((reward, index) => (
             <div key={index.toString()} className="flex justify-between items-center">

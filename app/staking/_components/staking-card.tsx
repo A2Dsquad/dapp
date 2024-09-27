@@ -14,6 +14,13 @@ import { useRouter } from 'next/navigation'
 import { useBalance } from '@/hooks/use-balance'
 import { useStake } from '@/hooks/use-stake'
 import { toDecimals } from '@/lib/number'
+import BigNumber from 'bignumber.js'
+import { usePoolStakedAmount } from '@/hooks/use-pool-staked-amount'
+import { fromDecimals } from '@/lib/number'
+import { useWallet } from '@aptos-labs/wallet-adapter-react'
+import { useUnstake } from '@/hooks/use-unstake'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Terminal } from 'lucide-react'
 
 interface StakingCardProps {
   assetName: string
@@ -29,17 +36,31 @@ const formSchema = z.object({
     },
     {
       message: 'Please enter a valid positive number',
-    }
+    },
   ),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
 export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardProps) {
+  const { account } = useWallet()
+
   const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit')
   const router = useRouter()
   const { data: balance = '0' } = useBalance(tokenAddress)
+  const { data: stakedAmount = 0 } = usePoolStakedAmount(tokenAddress)
   const stakeMutation = useStake(tokenAddress)
+  const unstakeMutation = useUnstake(tokenAddress)
+
+  const unstakeTime = typeof window !== 'undefined' ? localStorage.getItem('unstake-time') : null
+
+  const sevenDays = 7 * 24 * 60 * 60 * 1000
+  const unstakeWithdrawalTime = unstakeTime
+    ? new Date(Number.parseInt(unstakeTime)).getTime() + sevenDays
+    : null
+  const now = new Date().getTime()
+
+  const stakedAmountFormatted = fromDecimals(stakedAmount ?? 0)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -48,16 +69,31 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
     },
   })
 
+  const inputAmount = form.watch('amount')
+
   const handlePercentageClick = (percentage: number) => {
-    const maxAmount = Number.parseFloat(balance.replace(/,/g, ''))
-    const newAmount = ((maxAmount * percentage) / 100).toFixed(2)
-    form.setValue('amount', newAmount)
+    let maxAmount = 0
+    if (mode === 'withdraw') {
+      maxAmount = Number.parseFloat(stakedAmountFormatted.replace(/,/g, ''))
+    } else {
+      maxAmount = Number.parseFloat(balance.replace(/,/g, ''))
+    }
+
+    const newAmount = BigNumber(maxAmount).multipliedBy(percentage).dividedBy(100).toString()
+    form.setValue('amount', newAmount.toString())
   }
 
   const onSubmit = (data: FormValues) => {
     const amountInDecimal = toDecimals(data.amount)
-    stakeMutation.mutateAsync(amountInDecimal)
+    if (mode === 'deposit') {
+      stakeMutation.mutateAsync(amountInDecimal)
+    } else {
+      unstakeMutation.mutateAsync(amountInDecimal)
+    }
   }
+
+  const isDisabled =
+    mode === 'withdraw' ? stakedAmount === 0 || !inputAmount : !balance || !inputAmount
 
   return (
     <Card className="w-full max-w-xl mx-auto">
@@ -97,7 +133,9 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <p className="text-sm font-medium mb-3">You are {mode === 'deposit' ? 'restaking' : 'unstaking'}</p>
+              <p className="text-sm font-medium mb-3">
+                You are {mode === 'deposit' ? 'restaking' : 'unstaking'}
+              </p>
               <div className="bg-secondary p-4 rounded-md">
                 <FormField
                   control={form.control}
@@ -116,7 +154,9 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
                   )}
                 />
                 <div className="flex justify-between items-center mt-4">
-                  <span className="text-sm text-muted-foreground">${balance}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {mode === 'deposit' ? balance : stakedAmountFormatted} {assetName}
+                  </span>
                   <div className="flex space-x-2">
                     <Button
                       type="button"
@@ -146,9 +186,29 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
                 </div>
               </div>
             </div>
-            <Button type="submit" className="w-full" disabled={!form.formState.isDirty}>
-              {mode === 'deposit' ? 'Restake' : 'Unstake'}
-            </Button>
+            {mode === 'withdraw' &&
+              unstakeTime &&
+              unstakeWithdrawalTime &&
+              now < unstakeWithdrawalTime && (
+                <Alert>
+                  <Terminal className="h-5 w-5" />
+                  <AlertTitle>Unstake in queue</AlertTitle>
+                  <AlertDescription>
+                    You have unstaked at{' '}
+                    {new Date(Number.parseInt(unstakeTime ?? '')).toLocaleString()}. You can
+                    withdraw your stake in 7 days.
+                  </AlertDescription>
+                </Alert>
+              )}
+            {(mode === 'deposit' || !unstakeTime) && (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!form.formState.isDirty || isDisabled || !account}
+              >
+                {mode === 'deposit' ? 'Restake' : 'Unstake'}
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>
