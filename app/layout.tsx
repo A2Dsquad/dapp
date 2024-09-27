@@ -6,6 +6,7 @@ import { Kanit } from 'next/font/google'
 import { BackgroundBeams } from '@/components/aceternity/background-beams'
 import './globals.css'
 import { QueryProvider } from '@/components/providers/query-provider'
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: 'Sentra Layer',
@@ -33,6 +34,7 @@ export default function RootLayout({
               <Header />
               <div className="isolate">{children}</div>
             </div>
+            <Toaster />
           </WalletProvider>
         </QueryProvider>
       </body>

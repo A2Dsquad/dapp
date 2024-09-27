@@ -6,13 +6,13 @@ export function StakingSummary({ restaked, claimable }: { restaked: string, clai
       <Card>
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-2 text-muted-foreground">You restaked</h2>
-          <p className="text-4xl font-bold">${restaked}K</p>
+          <p className="text-4xl font-bold">${restaked}</p>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-2 text-muted-foreground">Your claimable rewards</h2>
-          <p className="text-4xl font-bold">${claimable}K</p>
+          <p className="text-4xl font-bold">${claimable}</p>
         </CardContent>
       </Card>
     </div>

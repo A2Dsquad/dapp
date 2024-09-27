@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Avatar } from '@/components/ui/avatar'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
@@ -25,7 +25,7 @@ export function AssetTable({
             <TableRow>
               <TableHead>Asset</TableHead>
               <TableHead>TVL</TableHead>
-              <TableHead>Restaked</TableHead>
+              <TableHead>Your restaked</TableHead>
               <TableHead>Your share</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -36,7 +36,7 @@ export function AssetTable({
                 <TableCell className="font-medium">
                   <div className="flex items-center space-x-2">
                     <Avatar className="w-6 h-6 bg-blue-500">
-                      <span className="text-sm">{asset.name[2].toLowerCase()}</span>
+                      <AvatarImage src="https://s2.coinmarketcap.com/static/img/coins/200x200/29034.png" />
                     </Avatar>
                     <span>{asset.name}</span>
                     {asset.apy && (

@@ -161,3 +161,16 @@ export function fromFemto(value: number | string | bigint | BigNumber) {
 export function toFemto(value: number | string | bigint | BigNumber) {
   return toDecimals(value.toString(), 18);
 }
+
+export function abbreviateNumber(
+    value: number,
+    decimals: number,
+    minDecimals?: number
+  ): string | number {
+    return Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: decimals,
+      minimumFractionDigits: minDecimals ?? decimals,
+    }).format(value);
+  }
+  

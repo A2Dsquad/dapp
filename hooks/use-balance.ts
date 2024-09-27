@@ -7,7 +7,6 @@ import { fromDecimals } from '@/lib/number'
 
 export function useBalance(tokenAddress: string) {
   const { account } = useWallet()
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const storeClient = surfClient.useABI(PrimaryFAStoreAbi as any)
 
   return useQuery({

@@ -2,6 +2,9 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react'
 import WithdrawalABI from '@sdk/abis/withdrawal.json'
 import { createEntryPayload } from '@thalalabs/surf'
 import { useSubmitTransaction } from '@thalalabs/surf/hooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { loopAsync } from '@/lib/utils'
 
 export function useUnstake(tokenAddress: string) {
   const { account } = useWallet()
@@ -14,6 +17,7 @@ export function useUnstake(tokenAddress: string) {
     data: submitResult,
   } = useSubmitTransaction()
 
+  const queryClient = useQueryClient()
   const mutateAsync = async (amount: string) => {
     if (!account) return
 
@@ -26,6 +30,8 @@ export function useUnstake(tokenAddress: string) {
 
       await submitTransaction(payload)
       localStorage.setItem('unstake-time', Date.now().toString())
+      toast.success('Unstaked successfully')
+      loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
       reset()
     } catch (error) {
       console.error('unstake error', error)
