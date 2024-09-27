@@ -42,7 +42,8 @@
         "noSkippedTests": "error",
         "useAwait": "error",
         "noConsoleLog": "error",
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noExplicitAny": "off"
       },
       "nursery": {
         "useImportRestrictions": "error"

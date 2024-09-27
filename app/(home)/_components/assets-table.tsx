@@ -45,7 +45,7 @@ export function AssetTable({
                   </div>
                 </TableCell>
                 <TableCell>${asset.tvl}M</TableCell>
-                <TableCell>${asset.restaked}K</TableCell>
+                <TableCell>${asset.restaked}</TableCell>
                 <TableCell>{asset.share}%</TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-col justify-end sm:flex-row gap-2">

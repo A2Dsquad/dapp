@@ -1,6 +1,11 @@
+'use client'
+
 import { StakingSummary } from '@/app/(home)/_components/staking-summary'
 import { RewardDetails } from '@/app/(home)/_components/staking-rewards'
 import { AssetTable } from '@/app/(home)/_components/assets-table'
+import { usePoolShares } from '@/hooks/use-pool-shares'
+import { fromDecimals } from '@/lib/number'
+import BigNumber from 'bignumber.js'
 
 export default function StakingPlatform() {
   const fakeRewards = [
@@ -20,6 +25,15 @@ export default function StakingPlatform() {
     { name: 'amAAVE', tvl: '876.54', restaked: '65.43', share: '0.21' },
   ]
 
+  const { data: poolShares } = usePoolShares()
+
+  const refinedAssets = fakeAssets.map(asset => ({
+    ...asset,
+    restaked: fromDecimals(poolShares?.[0]?.userStaked ?? 0),
+    share: BigNumber(poolShares?.[0]?.userStaked ?? 0).dividedBy(poolShares?.[0]?.poolStaked ?? 1).multipliedBy(100).toFixed(2),
+  }))
+
+
   return (
     <main className="container mx-auto p-4 pb-12 space-y-6 pt-16">
       <div className="grid md:grid-cols-3 gap-6">
@@ -28,7 +42,7 @@ export default function StakingPlatform() {
         </div>
         <RewardDetails rewards={fakeRewards} />
       </div>
-      <AssetTable assets={fakeAssets} />
+      <AssetTable assets={refinedAssets} />
     </main>
   )
 }
