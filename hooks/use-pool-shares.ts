@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { surfClient } from '@/lib/surf-client'
 import StakerManagerAbi from '@sdk/abis/staker-manager.json'
 import StakingPoolAbi from '@sdk/abis/staking-pool.json'
+import { POOL_ADDRESS, TOKEN_ADDRESS } from '@/lib/constants'
 
 const mapTokenToPool = {
-  '0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2': '0x7609205655ba8dd9c6882d2a8e025e3262b244c1c9b174f2711f688c49f6a6e2',
+  [TOKEN_ADDRESS]: POOL_ADDRESS,
 }
 
 export function usePoolShares() {

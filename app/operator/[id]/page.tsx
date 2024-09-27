@@ -1,47 +1,21 @@
 'use client'
 
-import { useState } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { Copy } from 'lucide-react'
+import { fakeOperators } from '@/lib/constants'
+import { useParams } from 'next/navigation'
+import { useDelegatedOperator } from '@/hooks/use-delegated-operator'
+import { shortenAddress } from '@/lib/utils'
+import { useDelegate } from '@/hooks/use-delegate'
+import { useUndelegate } from '@/hooks/use-undelegate'
+import { useWallet } from '@aptos-labs/wallet-adapter-react'
+import { Terminal } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { WalletSelector } from '@/components/wallet-selector'
 
-interface Operator {
-  id: string
-  name: string
-  avatar: string
-  delegatedTVL: string
-  restakers: number
-  avssSecured: number
-  about: string
-}
-
-const operators: Operator[] = [
-  {
-    id: '0x87384...ab432714',
-    name: 'Operator1',
-    avatar:
-      'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/8f/8f2f5e259a894a47df09cd62ea4db067867515c9_full.jpg',
-    delegatedTVL: '$217.57K',
-    restakers: 100,
-    avssSecured: 100,
-    about:
-      'Operator1 is a leading validator in the network with a strong track record of performance and reliability. Operator1 is a leading validator in the network with a strong track record of performance and reliability.',
-  },
-  {
-    id: '0x73984...ab432714',
-    name: 'Operator2',
-    avatar:
-      'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/8f/8f2f5e259a894a47df09cd62ea4db067867515c9_full.jpg',
-    delegatedTVL: '$217.57K',
-    restakers: 100,
-    avssSecured: 100,
-    about:
-      'Operator2 offers competitive staking rewards and has a robust infrastructure to support network operations.',
-  },
-]
-
-function OperatorInfo({ operator }: { operator: Operator }) {
+function OperatorInfo({ operator }: { operator: (typeof fakeOperators)[0] }) {
   return (
     <Card>
       <CardHeader>
@@ -52,7 +26,7 @@ function OperatorInfo({ operator }: { operator: Operator }) {
           <div>
             <h2 className="text-2xl font-bold">{operator.name}</h2>
             <div className="flex items-center text-muted-foreground">
-              <span>{operator.id}</span>
+              <span>{shortenAddress(operator.address)}</span>
               <Button variant="ghost" size="icon" className="ml-2">
                 <Copy className="h-4 w-4" />
               </Button>
@@ -69,7 +43,7 @@ function OperatorInfo({ operator }: { operator: Operator }) {
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Restakers</p>
-            <p className="text-4xl font-bold">{operator.restakers}</p>
+            <p className="text-4xl font-bold">{operator.stakers}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">AVS Secured</p>
@@ -89,44 +63,113 @@ function StakeInfo({
   stake,
   selectedOperator,
   onDelegateToggle,
-}: { stake: string; selectedOperator: Operator; onDelegateToggle: () => void }) {
+}: { stake: string; selectedOperator?: (typeof fakeOperators)[0]; onDelegateToggle: () => void }) {
+  const { account } = useWallet()
+  const undelegateTime =
+    typeof window !== 'undefined' ? localStorage.getItem('undelegate-time') : null
+
+  const sevenDays = 7 * 24 * 60 * 60 * 1000
+  const withdrawalTime = undelegateTime
+    ? new Date(Number.parseInt(undelegateTime)).getTime() + sevenDays
+    : null
+  const now = new Date().getTime()
+
+  const isWithdrawalAvailable = withdrawalTime && now > withdrawalTime
+
   return (
     <Card>
       <CardContent className="p-6 space-y-6">
         <div>
           <p className="text-sm text-muted-foreground">Your stake</p>
-          <p className="text-3xl font-bold">${stake}</p>
+          <p className="text-3xl font-bold">{account ? `$${stake}` : '--'}</p>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground mb-2">Your selected operator</p>
-          <div className="flex items-center space-x-2">
-            <Avatar className="w-8 h-8">
-              <img src={selectedOperator.avatar} alt={selectedOperator.name} />
-            </Avatar>
-            <div>
-              <p className="font-semibold">{selectedOperator.name}</p>
-              <p className="text-xs text-muted-foreground">{selectedOperator.id}</p>
-            </div>
+        {!account && (
+          <WalletSelector className="w-full" />
+        )}
+        {account && undelegateTime && !isWithdrawalAvailable && (
+          <div>
+            <Alert>
+              <Terminal className="h-5 w-5" />
+              <AlertTitle>Undelegate in progress</AlertTitle>
+              <AlertDescription>
+                You have undelegated at {new Date(Number.parseInt(undelegateTime)).toLocaleString()}
+                . You can withdraw your stake in 7 days.
+              </AlertDescription>
+            </Alert>
           </div>
-        </div>
-        <Button
-          className="w-full"
-          variant={selectedOperator.name === 'Operator2' ? 'destructive' : 'default'}
-          onClick={onDelegateToggle}
-        >
-          {selectedOperator.name === 'Operator2' ? 'Undelegate' : 'Delegate'}
-        </Button>
+        )}
+        {account && !undelegateTime && (
+          <>
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Your selected operator</p>
+              {selectedOperator ? (
+                <div className="flex items-center space-x-2">
+                  <Avatar className="w-8 h-8">
+                    <img src={selectedOperator.avatar} alt={selectedOperator.name} />
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">{selectedOperator.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {shortenAddress(selectedOperator.address)}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-muted-foreground">None</div>
+              )}
+            </div>
+            <Button
+              className="w-full"
+              variant={selectedOperator?.isDelegated ? 'destructive' : 'default'}
+              onClick={onDelegateToggle}
+            >
+              {selectedOperator?.isDelegated ? 'Undelegate' : 'Delegate'}
+            </Button>
+          </>
+        )}
       </CardContent>
     </Card>
   )
 }
 
 export default function OperatorDetailPage() {
-  const [currentOperator, setCurrentOperator] = useState(operators[0])
-  const [selectedOperator, setSelectedOperator] = useState(operators[1])
+  const { id } = useParams()
+  const { account } = useWallet()
 
-  const handleDelegateToggle = () => {
-    setSelectedOperator(selectedOperator === operators[0] ? operators[1] : operators[0])
+  const { data: delegatedOperator } = useDelegatedOperator()
+  const delegateMutation = useDelegate()
+  const undelegateMutation = useUndelegate()
+
+  const operators = fakeOperators.map((operator) => ({
+    ...operator,
+    isDelegated: operator.address === delegatedOperator,
+  }))
+
+  const currentOperator = operators.find((operator) => operator.address === id)
+  const selectedOperator = operators.find((operator) => operator.isDelegated)
+
+  const handleDelegateToggle = async () => {
+    if (!currentOperator || !account) return
+    if (undelegateMutation.isLoading || delegateMutation.isLoading) return
+
+    if (currentOperator.isDelegated) {
+      await undelegateMutation.mutateAsync()
+      localStorage.setItem('undelegate-time', Date.now().toString())
+    } else {
+      if (delegatedOperator && delegatedOperator !== currentOperator.address) {
+        await undelegateMutation.mutateAsync()
+        localStorage.setItem('undelegate-time', Date.now().toString())
+      }
+      await delegateMutation.mutateAsync(currentOperator.address)
+    }
+  }
+
+  if (!currentOperator) {
+    return (
+      <main className="container mx-auto p-4 pt-16" style={{ minHeight: 'calc(100vh - 80px)' }}>
+        <div>Operator not found</div>
+      </main>
+    )
   }
 
   return (

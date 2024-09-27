@@ -1,23 +1,31 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Avatar } from "@/components/ui/avatar"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Avatar } from '@/components/ui/avatar'
+import Link from 'next/link'
 
 interface Operator {
-  id: string;
-  name: string;
-  avatar: string;
-  totalRestaked: string;
-  stakers: number;
-  avssSecured: number;
-  isDelegate: boolean;
+  id: string
+  name: string
+  address: string
+  avatar: string
+  totalRestaked: string
+  stakers: number
+  avssSecured: number
+  isDelegated: boolean
 }
 
 interface OperatorTableProps {
-  operators: Operator[];
-  onDelegateToggle: (operatorId: string) => void;
+  operators: Operator[]
 }
 
-export function OperatorTable({ operators, onDelegateToggle }: OperatorTableProps) {
+export function OperatorTable({ operators }: OperatorTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -44,12 +52,11 @@ export function OperatorTable({ operators, onDelegateToggle }: OperatorTableProp
             <TableCell>{operator.stakers}</TableCell>
             <TableCell>{operator.avssSecured}</TableCell>
             <TableCell>
-              <Button
-                onClick={() => onDelegateToggle(operator.id)}
-                variant={operator.isDelegate ? "destructive" : "default"}
-              >
-                {operator.isDelegate ? "Undelegate" : "Delegate"}
-              </Button>
+              <Link href={`/operator/${operator.address}`}>
+                <Button variant={operator.isDelegated ? 'destructive' : 'default'}>
+                  {operator.isDelegated ? 'Undelegate' : 'Delegate'}
+                </Button>
+              </Link>
             </TableCell>
           </TableRow>
         ))}

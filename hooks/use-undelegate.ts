@@ -1,10 +1,10 @@
 import { useWallet } from '@aptos-labs/wallet-adapter-react'
-import StakerManagerABI from '@sdk/abis/staker-manager.json'
+import WithdrawalABI from '@sdk/abis/withdrawal.json'
 import { createEntryPayload } from '@thalalabs/surf'
 import { useSubmitTransaction } from '@thalalabs/surf/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 
-export function useDelegate() {
+export function useUndelegate() {
   const { account } = useWallet()
   const {
     isIdle,
@@ -16,21 +16,21 @@ export function useDelegate() {
   } = useSubmitTransaction()
   const queryClient = useQueryClient()
 
-  const mutateAsync = async (operator: string) => {
+  const mutateAsync = async () => {
     if (!account) return
 
     try {
-      const payload = createEntryPayload(StakerManagerABI as any, {
-        function: 'delegate',
+      const payload = createEntryPayload(WithdrawalABI as any, {
+        function: 'undelegate',
         typeArguments: [],
-        functionArguments: [operator] as unknown as [],
+        functionArguments: [account.address] as unknown as [],
       })
 
-      await submitTransaction(payload)
+        await submitTransaction(payload)
       queryClient.invalidateQueries({ queryKey: ['delegated-operator'] })
       reset()
     } catch (error) {
-      console.error('Error delegating', error)
+      console.error('Error undelegating', error)
       reset()
     }
   }

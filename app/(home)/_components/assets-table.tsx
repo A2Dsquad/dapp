@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 import { toCurrency } from '@/lib/number'
+import { TOKEN_ADDRESS } from '@/lib/constants'
 
 export function AssetTable({
   assets,
@@ -50,10 +51,10 @@ export function AssetTable({
                 <TableCell>{asset.share !== '--' ? `${asset.share}%` : '--'}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-col justify-end sm:flex-row gap-2">
-                    <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
+                    <Link href={`/staking/${TOKEN_ADDRESS}`}>
                       <Button variant="default">Deposit</Button>
                     </Link>
-                    <Link href="/staking/0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2">
+                    <Link href={`/staking/${TOKEN_ADDRESS}`}>
                       <Button variant="secondary">Withdraw</Button>
                     </Link>
                   </div>
