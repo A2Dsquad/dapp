@@ -63,7 +63,8 @@ function StakeInfo({
   stake,
   selectedOperator,
   onDelegateToggle,
-}: { stake: string; selectedOperator?: (typeof fakeOperators)[0]; onDelegateToggle: () => void }) {
+  loading,
+}: { stake: string; selectedOperator?: (typeof fakeOperators)[0]; onDelegateToggle: () => void, loading: boolean }) {
   const { account } = useWallet()
   const undelegateTime =
     typeof window !== 'undefined' ? localStorage.getItem('undelegate-time') : null
@@ -122,6 +123,7 @@ function StakeInfo({
               className="w-full"
               variant={selectedOperator?.isDelegated ? 'destructive' : 'default'}
               onClick={onDelegateToggle}
+              loading={loading}
             >
               {selectedOperator?.isDelegated ? 'Undelegate' : 'Delegate'}
             </Button>
@@ -183,6 +185,7 @@ export default function OperatorDetailPage() {
             stake="5000"
             selectedOperator={selectedOperator}
             onDelegateToggle={handleDelegateToggle}
+            loading={undelegateMutation.isLoading || delegateMutation.isLoading}
           />
         </div>
       </div>

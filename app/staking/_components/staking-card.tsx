@@ -245,6 +245,7 @@ export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardP
               type="submit"
               className="w-full"
               disabled={!form.formState.isDirty || isDisabled || !account}
+              loading={stakeMutation.isLoading || unstakeMutation.isLoading}
             >
               {mode === 'deposit' ? 'Restake' : 'Unstake'}
             </Button>
