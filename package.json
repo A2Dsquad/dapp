@@ -11,6 +11,7 @@
     "format": "biome format --write ."
   },
   "dependencies": {
+    "@aptos-labs/ts-sdk": "^1.28.0",
     "@aptos-labs/wallet-adapter-react": "^3.7.0",
     "@bitget-wallet/aptos-wallet-adapter": "^0.1.2",
     "@hookform/resolvers": "^3.9.0",
@@ -25,7 +26,10 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@tanstack/react-query": "^5.56.2",
+    "@thalalabs/surf": "^1.7.3",
     "@trustwallet/aptos-wallet-adapter": "^0.1.6",
+    "bignumber.js": "^9.1.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.21.0",

@@ -9,11 +9,14 @@ import { Avatar } from '@/components/ui/avatar'
 import { ArrowLeft } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { NumericInput } from '@/components/ui/numeric-input'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useBalance } from '@/hooks/use-balance'
 
 interface StakingCardProps {
   assetName: string
   assetIcon: string
-  balance: string
+  tokenAddress: string
 }
 
 const formSchema = z.object({
@@ -30,7 +33,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function StakingCard({ assetName, assetIcon, balance }: StakingCardProps) {
+export function StakingCard({ assetName, assetIcon, tokenAddress }: StakingCardProps) {
+  const [mode, setMode] = useState<'deposit' | 'withdraw'>('deposit')
+  const router = useRouter()
+  const { data: balance = '0' } = useBalance(tokenAddress)
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +61,7 @@ export function StakingCard({ assetName, assetIcon, balance }: StakingCardProps)
     <Card className="w-full max-w-xl mx-auto">
       <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-2">
         <div className="-ml-2 flex items-center gap-2">
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
@@ -66,10 +73,20 @@ export function StakingCard({ assetName, assetIcon, balance }: StakingCardProps)
           </div>
         </div>
         <div className="flex space-x-2 w-full md:w-auto">
-          <Button variant="secondary" size="sm" className="w-full md:w-auto">
+          <Button
+            variant={mode === 'deposit' ? 'secondary' : 'outline'}
+            onClick={() => setMode('deposit')}
+            size="sm"
+            className="w-full md:w-auto"
+          >
             Restake
           </Button>
-          <Button variant="outline" size="sm" className="w-full md:w-auto">
+          <Button
+            variant={mode === 'withdraw' ? 'secondary' : 'outline'}
+            onClick={() => setMode('withdraw')}
+            size="sm"
+            className="w-full md:w-auto"
+          >
             Unstake
           </Button>
         </div>
@@ -78,7 +95,7 @@ export function StakingCard({ assetName, assetIcon, balance }: StakingCardProps)
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <p className="text-sm font-medium mb-3">You are restaking</p>
+              <p className="text-sm font-medium mb-3">You are {mode === 'deposit' ? 'restaking' : 'unstaking'}</p>
               <div className="bg-secondary p-4 rounded-md">
                 <FormField
                   control={form.control}
@@ -127,8 +144,8 @@ export function StakingCard({ assetName, assetIcon, balance }: StakingCardProps)
                 </div>
               </div>
             </div>
-            <Button type="submit" className="w-full">
-              Deposit
+            <Button type="submit" className="w-full" disabled={!form.formState.isDirty}>
+              {mode === 'deposit' ? 'Restake' : 'Unstake'}
             </Button>
           </form>
         </Form>
