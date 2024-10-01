@@ -3,6 +3,10 @@ export const OPERATOR_2_ADDRESS = '0xf3e1e89a5673d4118c92736ee42e44abadbb35873e9
 export const TOKEN_ADDRESS = '0x3a97789007a67518d51c1733caef0c0a60d5db819e64d9bb5abc004f2df934a2'
 export const POOL_ADDRESS = '0x7609205655ba8dd9c6882d2a8e025e3262b244c1c9b174f2711f688c49f6a6e2'
 
+export const mapTokenToPool = {
+  [TOKEN_ADDRESS]: POOL_ADDRESS,
+}
+
 export const fakeOperators = [
     {
       id: '1',

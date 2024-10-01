@@ -40,13 +40,13 @@ export function AssetTable({
                     </Avatar>
                     <span>{asset.name}</span>
                     {asset.apy && (
-                      <Badge variant="secondary" className="ml-2">
+                      <Badge variant="cyan" className="ml-2">
                         APY: {asset.apy}%
                       </Badge>
                     )}
                   </div>
                 </TableCell>
-                <TableCell>${asset.tvl}M</TableCell>
+                <TableCell>{toCurrency(asset.tvl, { prefix: '$', decimals: 2 })}</TableCell>
                 <TableCell>{asset.restaked !== '--' ? toCurrency(asset.restaked, { prefix: '$' }) : '--'}</TableCell>
                 <TableCell>{asset.share !== '--' ? `${asset.share}%` : '--'}</TableCell>
                 <TableCell className="text-right">

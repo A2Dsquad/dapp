@@ -31,6 +31,7 @@ export function useStake(tokenAddress: string) {
       await submitTransaction(payload)
       toast.success('Staked successfully')
       loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
+      loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['balance', tokenAddress, account?.address]}), 1000)
       reset()
     } catch (error) {
       console.error('Error staking', error)

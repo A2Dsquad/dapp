@@ -55,6 +55,10 @@ const config: Config = {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        cyan: {
+          DEFAULT: 'hsl(var(--cyan))',
+          foreground: 'hsl(var(--cyan-foreground))',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

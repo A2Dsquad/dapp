@@ -33,7 +33,7 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
       plugins={wallets}
       autoConnect={autoConnect}
       dappConfig={{
-        network: Network.TESTNET,
+        network: Network.DEVNET,
         aptosApiKey: process.env.NEXT_PUBLIC_APTOS_API_KEY,
         aptosConnect: { dappId: "57fa42a9-29c6-4f1e-939c-4eefa36d9ff5" },
         mizuwallet: {

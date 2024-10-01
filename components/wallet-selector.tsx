@@ -17,18 +17,12 @@ import {
 import {
   ArrowLeft,
   ArrowRight,
-  ChevronDown,
   Copy,
   LogOut,
   User,
 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   Dialog,
   DialogContent,
@@ -120,7 +114,7 @@ function ConnectWalletDialog({
 }: ConnectWalletDialogProps) {
   const { wallets = [] } = useWallet();
 
-  const { aptosConnectWallets, availableWallets, installableWallets } =
+  const { aptosConnectWallets, availableWallets } =
     groupAndSortWallets(wallets, walletSortingOptions);
 
   const hasAptosConnectWallets = !!aptosConnectWallets.length;
@@ -176,24 +170,6 @@ function ConnectWalletDialog({
           {availableWallets.map((wallet) => (
             <WalletRow key={wallet.name} wallet={wallet} onConnect={close} />
           ))}
-          {!!installableWallets.length && (
-            <Collapsible className="flex flex-col gap-3">
-              <CollapsibleTrigger asChild>
-                <Button size="sm" variant="ghost" className="gap-2">
-                  More wallets <ChevronDown />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="flex flex-col gap-3">
-                {installableWallets.map((wallet) => (
-                  <WalletRow
-                    key={wallet.name}
-                    wallet={wallet}
-                    onConnect={close}
-                  />
-                ))}
-              </CollapsibleContent>
-            </Collapsible>
-          )}
         </div>
       </AboutAptosConnect>
     </DialogContent>
