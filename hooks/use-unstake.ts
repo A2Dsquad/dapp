@@ -21,27 +21,21 @@ export function useUnstake(tokenAddress: string) {
   const mutateAsync = async (amount: string) => {
     if (!account) return
 
-    try {
-      const payload = createEntryPayload(WithdrawalABI as any, {
-        function: 'queue_withdrawal',
-        typeArguments: [],
-        functionArguments: [[tokenAddress], [amount]] as unknown as [],
-      })
+    const payload = createEntryPayload(WithdrawalABI as any, {
+      function: 'queue_withdrawal',
+      typeArguments: [],
+      functionArguments: [[tokenAddress], [amount]] as unknown as [],
+    })
 
-      await submitTransaction(payload)
-      const unstakeTimesLocal = localStorage.getItem('unstake-time')?.split(',') ?? []
-      if (unstakeTimesLocal) {
-        localStorage.setItem('unstake-time', [...unstakeTimesLocal, Date.now().toString()].join(','))
-      } else {
-        localStorage.setItem('unstake-time', Date.now().toString())
-      }
-      toast.success('Unstaked successfully')
-      loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
-      reset()
-    } catch (error) {
-      console.error('unstake error', error)
-      reset()
+    await submitTransaction(payload)
+    const unstakeTimesLocal = localStorage.getItem('unstake-time')?.split(',') ?? []
+    if (unstakeTimesLocal) {
+      localStorage.setItem('unstake-time', [...unstakeTimesLocal, Date.now().toString()].join(','))
+    } else {
+      localStorage.setItem('unstake-time', Date.now().toString())
     }
+    toast.success('Unstaked successfully')
+    loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
   }
 
   return {

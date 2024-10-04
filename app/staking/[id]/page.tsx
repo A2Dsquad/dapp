@@ -8,7 +8,7 @@ export default function StakingPage() {
 
   return (
     <main
-      className="container mx-auto p-4 flex items-center justify-center -mt-20"
+      className="container mx-auto p-4 overflow-y-auto"
       style={{ minHeight: 'calc(100vh - 80px)' }}
     >
       <StakingCard

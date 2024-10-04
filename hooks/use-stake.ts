@@ -21,22 +21,16 @@ export function useStake(tokenAddress: string) {
   const mutateAsync = async (amount: string) => {
     if (!account) return
 
-    try {
-      const payload = createEntryPayload(StakerManagerABI as any, {
-        function: 'stake_asset_entry',
-        typeArguments: [],
-        functionArguments: [tokenAddress, amount] as unknown as [],
-      })
+    const payload = createEntryPayload(StakerManagerABI as any, {
+      function: 'stake_asset_entry',
+      typeArguments: [],
+      functionArguments: [tokenAddress, amount] as unknown as [],
+    })
 
-      await submitTransaction(payload)
-      toast.success('Staked successfully')
-      loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
-      loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['balance', tokenAddress, account?.address]}), 1000)
-      reset()
-    } catch (error) {
-      console.error('Error staking', error)
-      reset()
-    }
+    await submitTransaction(payload);
+    toast.success('Staked successfully')
+    loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['pool-staked-amount', account?.address] }), 1000)
+    loopAsync(3, () => queryClient.invalidateQueries({ queryKey: ['balance', tokenAddress, account?.address] }), 1000)
   }
 
   return {
