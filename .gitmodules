@@ -1,3 +1,0 @@
-[submodule "restaking-ts-sdk"]
-	path = restaking-ts-sdk
-	url = git@github.com/A2Dsquad/restaking-ts-sdk.git
