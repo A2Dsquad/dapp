@@ -14,6 +14,8 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react'
 import { Terminal } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { WalletSelector } from '@/components/wallet-selector'
+import { usePoolShares } from '@/hooks/use-pool-shares'
+import { abbreviateNumber, fromDecimals } from '@/lib/number'
 
 function OperatorInfo({ operator }: { operator: (typeof fakeOperators)[0] }) {
   return (
@@ -60,12 +62,18 @@ function OperatorInfo({ operator }: { operator: (typeof fakeOperators)[0] }) {
 }
 
 function StakeInfo({
-  stake,
   selectedOperator,
   onDelegateToggle,
   loading,
-}: { stake: string; selectedOperator?: (typeof fakeOperators)[0]; onDelegateToggle: () => void, loading: boolean }) {
+}: { selectedOperator?: (typeof fakeOperators)[0]; onDelegateToggle: () => void, loading: boolean }) {
   const { account } = useWallet()
+
+  const { data: poolShares } = usePoolShares();
+
+  const totalRestaked = poolShares?.[0]?.totalShares
+  ? fromDecimals(poolShares?.[0]?.totalShares ?? 0)
+  : 0;
+
   const undelegateTime =
     typeof window !== 'undefined' ? localStorage.getItem('undelegate-time') : null
 
@@ -82,7 +90,7 @@ function StakeInfo({
       <CardContent className="p-6 space-y-6">
         <div>
           <p className="text-sm text-muted-foreground">Your stake</p>
-          <p className="text-3xl font-bold">{account ? `$${stake}` : '--'}</p>
+          <p className="text-3xl font-bold">{account ? `$${abbreviateNumber(Number(totalRestaked), 2).toString()}` : '--'}</p>
         </div>
         {!account && (
           <WalletSelector className="w-full" />
@@ -182,7 +190,6 @@ export default function OperatorDetailPage() {
         </div>
         <div>
           <StakeInfo
-            stake="5000"
             selectedOperator={selectedOperator}
             onDelegateToggle={handleDelegateToggle}
             loading={undelegateMutation.isLoading || delegateMutation.isLoading}
