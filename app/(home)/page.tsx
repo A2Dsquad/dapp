@@ -11,28 +11,16 @@ import { abbreviateNumber } from "@/lib/number";
 import { useUserShares } from "@/hooks/use-user-shares";
 
 export default function StakingPlatform() {
-  const fakeReward = { name: "rZkETH", amount: "0", token: "rZkETH" };
+  const fakeReward = { name: "APT", amount: "0", token: "APT" };
 
   const fakeAssets = [
     {
-      name: "amETH",
+      name: "stAPT",
       apy: "4.18",
       tvl: "9876.54",
       restaked: "432.10",
       share: "1.87",
     },
-    {
-      name: "amUSDC",
-      apy: "3.75",
-      tvl: "5678.90",
-      restaked: "321.09",
-      share: "1.45",
-    },
-    { name: "amBTC", tvl: "3456.78", restaked: "234.56", share: "0.98" },
-    { name: "amLINK", tvl: "2345.67", restaked: "123.45", share: "0.76" },
-    { name: "amUNI", tvl: "1234.56", restaked: "98.76", share: "0.54" },
-    { name: "amSNX", tvl: "987.65", restaked: "76.54", share: "0.32" },
-    { name: "amAAVE", tvl: "876.54", restaked: "65.43", share: "0.21" },
   ];
 
   const { data: poolShares } = usePoolShares();

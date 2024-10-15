@@ -28,17 +28,17 @@ interface AVSDetail {
 const avsDetail: AVSDetail = {
   id: '0x73984...ab432714',
   name: 'Sentra Bridge',
-  avatar: 'https://w7.pngwing.com/pngs/1007/775/png-transparent-bnb-cryptocurrencies-icon.png',
+  avatar: '/assets/sentra-bridge-logo.png',
   delegatedTVL: '$217.57K',
   restakers: 12,
   operators: 5,
   about:
-    "Sentra Bridge is a data availability solution with 10 MiB/s of write throughput and the lowest cost in its class. The system's design is inspired by Danksharding, which promises to scale Aptos's DA beyond EIP-4844. Sentra Bridge is available today.",
+    "Sentra Bridge is an ETH-Aptos bridge service powered by Zero-knowledge technology",
   weeklyRewards: [
     {
-      token: 'rZkETH',
-      amount: '0.1 rZkETH',
-      icon: 'https://cryptoeq-db.s3.amazonaws.com/16558499261041876703',
+      token: 'APT',
+      amount: '0.1 APT',
+      icon: 'https://cryptologos.cc/logos/aptos-apt-logo.svg?v=035',
     },
   ],
 }
@@ -119,7 +119,7 @@ function WeeklyRewardsCard({ rewards }: { rewards: AVSDetail['weeklyRewards'] })
             <div key={index.toString()} className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <Avatar className="w-6 h-6">
-                  <img src={reward.icon} alt={reward.token} />
+                  <img src={reward.icon} alt={reward.token} className="w-6 h-6 bg-gray-200 rounded-full" />
                 </Avatar>
                 <span className="text-muted-foreground">{reward.token}</span>
               </div>

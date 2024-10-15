@@ -18,7 +18,7 @@ export function RewardDetails({
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              <img src="https://cryptoeq-db.s3.amazonaws.com/16558499261041876703" className="w-6 h-6 bg-gray-200 rounded-full" alt="reward token" />
+              <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=035" className="w-6 h-6 bg-gray-200 rounded-full" alt="reward token" />
               <span>{reward.name}</span>
             </div>
             <span>
