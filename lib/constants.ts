@@ -11,30 +11,30 @@ export const fakeOperators = [
     {
       id: '1',
       address: OPERATOR_1_ADDRESS,
-      name: 'Operator1',
+      name: 'AnyAxis',
       avatar:
-        'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/8f/8f2f5e259a894a47df09cd62ea4db067867515c9_full.jpg',
+        '/assets/anyaxis.jpg',
       totalRestaked: '$18M',
       delegatedTVL: '$217.57K',
       stakers: 106,
       avssSecured: 3,
       isDelegated: false,
       about:
-      'Operator1 is a leading validator in the network with a strong track record of performance and reliability. Operator1 is a leading validator in the network with a strong track record of performance and reliability.',
+      'Any.Axis is a leading validator in the network with a strong track record of performance and reliability. Decentrio is a leading validator in the network with a strong track record of performance and reliability.',
     },
     {
     id: '2',
     address: OPERATOR_2_ADDRESS,
-    name: 'Operator2',
+    name: 'Decentrio',
     avatar:
-        'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/8f/8f2f5e259a894a47df09cd62ea4db067867515c9_full.jpg',
+        '/assets/decentrio.jpg',
       totalRestaked: '$12M',
       delegatedTVL: '$217.57K',
       stakers: 156,
     avssSecured: 1,
     isDelegated: false,
     about:
-      'Operator2 offers competitive staking rewards and has a robust infrastructure to support network operations.',
+      'Decentrio offers competitive staking rewards and has a robust infrastructure to support network operations.',
   },
 ]
   
