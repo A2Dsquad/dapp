@@ -324,7 +324,7 @@ export function StakingCard({
           open={stakeMutation.data || unstakeMutation.data}
           txLink={`https://explorer.aptoslabs.com/txn/${
             stakeMutation.data?.hash || unstakeMutation.data?.hash
-          }?network=devnet`}
+          }?network=testnet`}
           onOpenChange={() => {
             stakeMutation.reset();
             unstakeMutation.reset();
