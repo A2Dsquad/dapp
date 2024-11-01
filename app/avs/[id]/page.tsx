@@ -88,7 +88,7 @@ function AvsInfo({ avs }: { avs: AVSDetail }) {
               </div>
             </div>
           </div>
-          <Link href="https://snazzy-unicorn-c6c751.netlify.app/" target='_blank'>
+          <Link href="https://sentra-bridge.netlify.app/" target='_blank'>
           <Button>
             Go to Sentra Bridge <ArrowUpRight className="h-4 w-4 ml-2" />
           </Button>
